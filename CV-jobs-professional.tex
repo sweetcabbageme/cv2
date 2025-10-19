@@ -1,0 +1,921 @@
+\documentclass[10pt, letterpaper]{article}
+
+
+% Packages:
+
+\usepackage{comment} %
+\usepackage{ragged2e}
+
+\usepackage[
+    ignoreheadfoot, % set margins without considering header and footer
+    top=2 cm, % seperation between body and page edge from the top
+    bottom=2 cm, % seperation between body and page edge from the bottom
+    left=2 cm, % seperation between body and page edge from the left
+    right=2 cm, % seperation between body and page edge from the right
+    footskip=1.0 cm, % seperation between body and footer
+    % showframe % for debugging 
+]{geometry} % for adjusting page geometry
+\usepackage{titlesec} % for customizing section titles
+\usepackage{tabularx} % for making tables with fixed width columns
+\usepackage{array} % tabularx requires this
+\usepackage[dvipsnames]{xcolor} % for coloring text
+\definecolor{primaryColor}{RGB}{0, 0, 0} % define primary color
+\usepackage{enumitem} % for customizing lists
+\usepackage{fontawesome5} % for using icons
+\usepackage{amsmath} % for math
+\usepackage[
+    pdftitle={John Doe's CV},
+    pdfauthor={John Doe},
+    pdfcreator={LaTeX with RenderCV},
+    colorlinks=true,
+    urlcolor=primaryColor
+]{hyperref} % for links, metadata and bookmarks
+\usepackage[pscoord]{eso-pic} % for floating text on the page
+\usepackage{calc} % for calculating lengths
+\usepackage{bookmark} % for bookmarks
+\usepackage{lastpage} % for getting the total number of pages
+\usepackage{changepage} % for one column entries (adjustwidth environment)
+\usepackage{paracol} % for two and three column entries
+\usepackage{ifthen} % for conditional statements
+\usepackage{needspace} % for avoiding page brake right after the section title
+\usepackage{iftex} % check if engine is pdflatex, xetex or luatex
+
+% Ensure that generate pdf is machine readable/ATS parsable:
+\ifPDFTeX
+    \input{glyphtounicode}
+    \pdfgentounicode=1
+    \usepackage[T1]{fontenc}
+    \usepackage[utf8]{inputenc}
+    \usepackage{lmodern}
+\fi
+
+\usepackage{charter}
+
+% Some settings:
+\raggedright
+\AtBeginEnvironment{adjustwidth}{\partopsep0pt} % remove space before adjustwidth environment
+\pagestyle{empty} % no header or footer
+\setcounter{secnumdepth}{0} % no section numbering
+\setlength{\parindent}{0pt} % no indentation
+\setlength{\topskip}{0pt} % no top skip
+\setlength{\columnsep}{0.15cm} % set column seperation
+\pagenumbering{gobble} % no page numbering
+
+\titleformat{\section}{\needspace{4\baselineskip}\bfseries\large}{}{0pt}{}[\vspace{0.1pt}\titlerule]
+
+\titlespacing{\section}{
+    % left space:
+    -1pt
+}{
+    % top space:
+    0.1 cm
+}{
+    % bottom space:
+    0.1 cm
+} % section title spacing
+
+\renewcommand\labelitemi{$\vcenter{\hbox{\small$\bullet$}}$} % custom bullet points
+\newenvironment{highlights}{
+    \begin{itemize}[
+        topsep=0.10 cm,
+        parsep=0.10 cm,
+        partopsep=0pt,
+        itemsep=0pt,
+        leftmargin=0 cm + 10pt
+    ]
+}{
+    \end{itemize}
+} % new environment for highlights
+
+
+\newenvironment{highlightsforbulletentries}{
+    \begin{itemize}[
+        topsep=0.10 cm,
+        parsep=0.10 cm,
+        partopsep=0pt,
+        itemsep=0pt,
+        leftmargin=10pt
+    ]
+}{
+    \end{itemize}
+} % new environment for highlights for bullet entries
+
+\newenvironment{onecolentry}{
+    \begin{adjustwidth}{
+        0 cm + 0.00001 cm
+    }{
+        0 cm + 0.00001 cm
+    }
+}{
+    \end{adjustwidth}
+} % new environment for one column entries
+
+\newenvironment{twocolentry}[2][]{
+    \onecolentry
+    \def\secondColumn{#2}
+    \setcolumnwidth{\fill, 4.5 cm}
+    \begin{paracol}{2}
+}{
+    \switchcolumn \raggedleft \secondColumn
+    \end{paracol}
+    \endonecolentry
+} % new environment for two column entries
+
+\newenvironment{threecolentry}[3][]{
+    \onecolentry
+    \def\thirdColumn{#3}
+    \setcolumnwidth{, \fill, 4.5 cm}
+    \begin{paracol}{3}
+    {\raggedright #2} \switchcolumn
+}{
+    \switchcolumn \raggedleft \thirdColumn
+    \end{paracol}
+    \endonecolentry
+} % new environment for three column entries
+
+\newenvironment{header}{
+    \setlength{\topsep}{0pt}\par\kern\topsep\centering\linespread{1}
+}{
+    \par\kern\topsep
+} % new environment for the header
+
+\newcommand{\placelastupdatedtext}{% \placetextbox{<horizontal pos>}{<vertical pos>}{<stuff>}
+  \AddToShipoutPictureFG*{% Add <stuff> to current page foreground
+    \put(
+        \LenToUnit{\paperwidth-2 cm-0 cm+0.05cm},
+        \LenToUnit{\paperheight-1.0 cm}
+    ){\vtop{{\null}\makebox[0pt][c]{
+        \small\color{gray}\textit{Last updated in September 2024}\hspace{\widthof{Last updated in September 2024}}
+    }}}%
+  }%
+}%
+
+% save the original href command in a new command:
+\let\hrefWithoutArrow\href
+
+% new command for external links:
+
+
+\begin{document}
+    \newcommand{\AND}{\unskip
+        \cleaders\copy\ANDbox\hskip\wd\ANDbox
+        \ignorespaces
+    }
+    \newsavebox\ANDbox
+    \sbox\ANDbox{$|$}
+
+    \begin{header}
+        \fontsize{25 pt}{25 pt}\selectfont Yanfei Sang
+
+        \vspace{5 pt}
+
+        \normalsize
+        \mbox{Leeds, UK}%
+        \kern 5.0 pt%
+        \AND%
+        \kern 5.0 pt%
+        \mbox{\hrefWithoutArrow{mailto:yaffy110@gmail.com}{yaffy110@gmail.com}}%
+        \kern 5.0 pt%
+        \AND%
+        \kern 5.0 pt%
+        \mbox{\hrefWithoutArrow{tel:+44-07774726035}{+44-07774726035}}%
+        \kern 5.0 pt%
+        \AND%
+        \kern 5.0 pt%
+        
+\begin{comment}        \mbox{\hrefWithoutArrow{https://yourwebsite.com/}{yourwebsite.com}}%
+        \kern 5.0 pt%
+        \AND%
+        \kern 5.0 pt%
+        \mbox{\hrefWithoutArrow{https://linkedin.com/in/yourusername}{linkedin.com/in/yourusername}}%
+        \kern 5.0 pt%
+        \AND%
+        \kern 5.0 pt%
+        \mbox{\hrefWithoutArrow{https://github.com/yourusername}{github.com/yourusername}}%
+    \end{header}
+
+    \vspace{5 pt - 0.3 cm}
+\end{comment}
+
+\begin{comment}
+    
+
+  \section{Education}
+
+
+
+        
+        \begin{onecolentry}
+            \href{https://rendercv.com}{RenderCV} is a LaTeX-based CV/resume version-control and maintenance app. It allows you to create a high-quality CV or resume as a PDF file from a YAML file, with \textbf{Markdown syntax support} and \textbf{complete control over the LaTeX code}.
+        \end{onecolentry}
+
+        \vspace{0.2 cm}
+
+        \begin{onecolentry}
+            The boilerplate content was inspired by \href{https://github.com/dnl-blkv/mcdowell-cv}{Gayle McDowell}.
+        \end{onecolentry}
+
+
+    
+    \section{Quick Guide}
+
+    \begin{onecolentry}
+        \begin{highlightsforbulletentries}
+
+
+        \item Each section title is arbitrary and each section contains a list of entries.
+
+        \item There are 7 unique entry types: \textit{BulletEntry}, \textit{TextEntry}, \textit{EducationEntry}, \textit{ExperienceEntry}, \textit{NormalEntry}, \textit{PublicationEntry}, and \textit{OneLineEntry}.
+
+        \item Select a section title, pick an entry type, and start writing your section!
+
+        \item \href{https://docs.rendercv.com/user_guide/}{Here}, you can find a comprehensive user guide for RenderCV.
+
+
+        \end{highlightsforbulletentries}
+    \end{onecolentry}
+
+\end{comment}
+    \section{Education}
+
+
+
+        
+        \begin{twocolentry}{
+            Sep 2024 – Present
+        }
+            \textbf{University of Leeds (UoL), Leeds, UK}, MSc Nutrition\end{twocolentry}
+
+        \vspace{0.10 cm}
+       
+ \begin{twocolentry}{
+            Sep 2019 – Jul 2022
+        }
+           \textbf{Hefei University of Technology (HFUT), Hefei, China}, MRes\end{twocolentry}
+
+        \vspace{0.10 cm}
+        \begin{onecolentry}
+            \begin{highlights}
+               \item Major in Processing and Storage Engineering of Aquatic Products
+            
+
+            \end{highlights}
+            
+        \end{onecolentry}
+   \begin{twocolentry}{
+            Jul 2017 - Aug 2017 } \textbf{University of Georgia}, \textbf{Athens, US}, International Summer Program\end{twocolentry}
+        \begin{twocolentry}{
+        Sep 2015 – Jul 2019
+        }
+            \textbf{Shanghai Ocean University (SHOU), Shanghai, China, }BSc Food Quality \& Safety
+        \end{twocolentry}
+    \vspace{0.10 cm}
+    \begin{onecolentry}
+        \begin{highlights}
+        
+            \item Overall GPA: \textbf{3.65/4.00} (87.77/100), Ranking: \textbf{6/67}
+           
+        \end{highlights}
+         
+    \end{onecolentry}
+    \begin{comment}
+      
+  
+  \begin{onecolentry}
+    
+         
+    
+      \textbf{Core courses}: Sensory Evaluation of Food, Food Quality Inspection, Risk assessment of Food Safety, Food Microbiology, Biochemistry, Nutritional Epidemiology and Dietary Research Methods (STAT).
+       
+  \end{onecolentry}
+    \end{comment}
+  
+\section{Honors\&Awards}
+
+    \begin{twocolentry}
+        {2020}
+        Anhui Province Food Innovation Competition, \textbf{Second Prize}
+       
+    \end{twocolentry}
+    \begin{twocolentry}
+         {2019}
+        The 2nd China University Life Science Competition, \textbf{Second Prize}
+    \end{twocolentry}
+\begin{twocolentry}
+         {2017,2018}
+        OUTSTANDING STUDENT of the University (Top 3\%), 
+    \end{twocolentry}
+    \begin{twocolentry}
+         {2018}
+        PEOPLE’S SCHOLARSHIP, {\textbf{First Class}(Top 5\%)}
+    \end{twocolentry}
+    \begin{twocolentry}
+         {2016,2017}
+        Outstanding Student in Social Work(Top 6\%)
+    \end{twocolentry}
+    \begin{twocolentry}
+         {2016,2017}
+       National Encouragement Scholarship of China, (Top 3\%-5\%)
+    \end{twocolentry}
+    \begin{twocolentry}
+         {2016}
+        LuoZhaoyao Science and Technology Fellowship
+        \end{twocolentry}
+
+    \section*{\RaggedRight Research Experience}
+  
+
+                  \begin{onecolentry}
+        \textbf{\textbf{\textbf{Systematic review: How do nutrition interventions alter ceramide composition in the mammalian lipid bilayer?}
+ }}
+    \end{onecolentry}
+        \begin{twocolentry}{
+            Jun 2025 – Sep 2025
+        }
+            \textbf{Independent Researcher}, Leeds, UK, \end{twocolentry}
+\begin{onecolentry}
+    Advisor: Professor James Thorne, School of Food Science and Nutrition, UoL
+\end{onecolentry}
+        \vspace{0.10 cm}
+        \begin{onecolentry}
+            \begin{highlights}
+                \item Conducted a systematic review on nutritional interventions and cell signaling, including protocol registration (PROSPERO), database searches, data extraction, and analysis of intervention effects on ceramide subtypes and cell signaling pathways.
+            \end{highlights}
+        \end{onecolentry}
+
+\vspace{0.2 cm}
+
+
+                \begin{onecolentry}
+        \textbf{\textbf{Quality changes and protein denaturation mechanism of crayfish meat during frozen storage }}
+    \end{onecolentry}
+        \begin{twocolentry}{
+            Sep 2019 – May 2022
+        }
+            \textbf{Independent Researcher}, Anhui, China, \end{twocolentry}
+\begin{onecolentry}
+    Advisor: Associate Professor Lin Lin, School of Food and Medicine, HFUT
+\end{onecolentry}
+        \vspace{0.10 cm}
+        \begin{onecolentry}
+            \begin{highlights}
+                \item Conducted a one-year study on frozen crayfish to assess myofibrillar protein properties, structural changes, and protein oxidation. Applied proteomics to compare fresh and frozen samples, explored KEGG pathways, and evaluated additive effects on gel properties and protein denaturation.
+              
+            \end{highlights}
+        \end{onecolentry}
+
+        \begin{onecolentry}
+            \textbf{Tools used}: Proteomics (KEGG Pathway Database, Prisma, Origin, Python), freezing storage (LF-NMR, FTIR), food structure analysis (Zeta Potential Analyzer, TA, SEM, TEM,)
+        \end{onecolentry}
+
+\vspace{0.2 cm}
+
+                    \begin{onecolentry}
+        \textbf{\textbf{The Detection of \textit{Staphylococcus aureus}, \textit{Salmonella typhimurium }and \textit{Listeria monocytogenes }by Multiplex Fluorescence Quantitative PCR }
+}
+    \end{onecolentry}
+        \begin{twocolentry}{
+            Jun 2018 – May 2019
+        }
+            \textbf{Independent Researcher}, Shanghai, China, \end{twocolentry}
+\begin{onecolentry}
+    Advisor: Doctor Yongxin Yu, Food College, SHOU
+\end{onecolentry}
+        \vspace{0.10 cm}
+        \begin{onecolentry}
+            \begin{highlights}
+                \item Based on qPCR, a method for the rapid detection of thermophilic bacteria in dairy products is established
+             
+            \end{highlights}
+        \end{onecolentry}
+
+\vspace{0.2 cm}
+
+           \begin{onecolentry}
+        \textbf{Bacteriostasis of Bamboo Shoot Dietary Fiber}
+    \end{onecolentry}
+        \begin{twocolentry}{
+            May 2018 – Jun 2018
+        }
+            \textbf{Independent Researcher}, Shanghai, China, \end{twocolentry}
+\begin{onecolentry}
+    Advisor: Associate Professor Xiaohui Li, Food College, SHOU
+\end{onecolentry}
+        \vspace{0.10 cm}
+        \begin{onecolentry}
+            \begin{highlights}
+                \item Extracted dietary fiber from bamboo shoots using a dual-enzyme method and evaluated its antimicrobial activity against spoilage bacteria. Assessed MIC/MBC, time-dependent inhibition, and compared efficacy with standard food preservatives.
+            \end{highlights}
+        \end{onecolentry}
+\begin{onecolentry}
+    \textbf{Tools used}: Microbiology experiment, Development of natural antibacterial agents
+\end{onecolentry}
+\vspace{0.2 cm}
+
+        \begin{onecolentry}
+            \textbf{Umami and bitterness profile of enzymatic protein hydrolysates from cultured Takifugu obscurus by-products}
+        \end{onecolentry}
+        \begin{twocolentry}{
+            Dec 2017 – Apr 2018
+        }
+            \textbf{Research Assistant}, Shanghai,China
+            \end{twocolentry}
+
+        \vspace{0.10 cm}
+        \begin{onecolentry}
+            Advisor: Professor Yuan Liu, Food Science and Technology College, Shanghai Jiao Tong University
+        \end{onecolentry}
+        \begin{onecolentry}
+            \begin{highlights}
+              \item Evaluated the chemical composition and sensory properties of \textit{T. obscurus} by-products. Applied response surface methodology to optimize enzymatic hydrolysis conditions targeting umami and bitterness, supported by sensory evaluation and free amino acid analysis.
+            \end{highlights}
+        \end{onecolentry}
+        \begin{onecolentry}
+            \textbf{Tools used}: Sensory evaluation, Food chemistry analysis (the Kjeldahl method, Soxhlet extraction, Box–Behnken response surface design, Automatic amino acid analyzer )
+        \end{onecolentry}
+
+
+        \vspace{0 cm}
+
+  \section{Publications}
+
+
+
+        
+       
+            \begin{onecolentry}
+                [1]\textbf{SANG YF}, ZHENG JJ, YANG L, JIANG ST, LIN L*, LU JF*, Effect of different freezing methods on the quality changes of precooked freshwater crayfish \textit{(Procambarus clarkii}) during frozen storage[J]. Scholarly Journal of Food and Nutrition, 2022. IF:0.614. DOI: \href{https://lupinepublishers.com/food-and-nutri-journal/special-issue/SJFN.MS.ID.000185.pdf}{10.32474/SJFN.2022.04.000185}
+            \end{onecolentry}
+
+            \vspace{0.10 cm}
+        
+        
+       
+        
+    \begin{onecolentry}       
+[2]\textbf{SANG YF}, YANG L, QIAN XP, JIANG ST, LU JF, LIN L*, Study on protein denaturation of crayfish meat during long-term frozen storage[J]Modern Food Science and Technology, 2023:1-10. IF: 0.52. DOI:\href{https://www.cnki.net/KCMS/detail/detail.aspx?dbcode=CJFD&dbname=CJFDLAST2023&filename=GZSP202302028&uniplatform=OVERSEA&v=soOOZP5IWiK8zEoJiUSH25hrWkfwL_jG5fhK2S2Gdr39PaWyCe0h2EooTi6tn2Wn}{10.13982/j.mfst.1673-9078.2023.2.0329}
+
+    \end{onecolentry}
+    
+    \begin{onecolentry}
+        
+[3] ZHANG YL, XIANG JF, ZHU YJ, \textbf{SANG YF}, JIANG ST, LU JF*; Comparison of characteristics during cold storage of alive and dead crayfish[J]. \href{https://www.cnki.net/KCMS/detail/detail.aspx?dbcode=CJFD&dbname=CJFDLAST2022&filename=SPKX202201025&uniplatform=OVERSEA&v=sbig8z5V17yBY-AqcUtSxQFcHpMtT_5pcrf-lFPcgidcdf6c1G7QMfD7iGiFk00C}{Food Science, 2021: 1–10}.  IF: 2.874
+
+    \end{onecolentry}
+
+\begin{onecolentry}
+    [4] \textbf{SANG YF}, 2022. \textit{Quality Changes and Protein Denaturation Mechanism of Crayfish Meat during Frozen Storage}.[Online] Master, China: Hefei University of Technology. DOI:\href{https://www.cnki.net/KCMS/detail/detail.aspx?dbcode=CMFD&dbname=CMFD202301&filename=1023419051.nh&uniplatform=OVERSEA&v=jviURrJ1McC-qI-_oaxBTJITqSRSC5onZ8h1phAECx3rV9Jes7ySd36RexrqsF28}{ 10.27101/d.cnki.ghfgu.2022.001220} 
+
+\end{onecolentry}
+
+    \begin{onecolentry}
+        
+[5] Effects of four exogenous additives on macro conformation of myofibrillar protein of crayfish. In submitted.
+
+    \end{onecolentry}
+    
+    \begin{onecolentry}
+        
+[6] Molecular mechanism of protein dynamic change for crayfish. In submitted. 
+
+    \end{onecolentry}
+
+
+
+\section{Conferences}
+
+\begin{onecolentry}
+    
+[1]Study on protein denaturation of crayfish meat during long-term frozen storage | Lecturer | 2021 Annual Academic Conference on Aquatic Product Processing and Comprehensive Utilization of China Society of Fisheries, Liao’ning, China, December 2021 
+
+\end{onecolentry}
+\begin{onecolentry}
+    
+[2]Effect of different freezing methods on the quality changes of precooked freshwater crayfish (\textit{Procambarus clarkii}) during frozen storage | Lecturer | 2020 Annual Academic Conference on Aquatic Products Processing and Comprehensive Utilization of China Society of Fisheries, Guangdong, China, December 2020 
+
+\end{onecolentry}
+
+    
+
+     
+
+    \section{\RaggedRight{Competition Experience}}
+
+    \begin{comment}
+        
+    
+
+         \begin{twocolentry}{
+            Apr.2025
+        }
+            \textbf{\textbf{Health promotion event: Food makeover- Healthier Swaps You'LL Love| Team work }
+}\end{twocolentry}
+\begin{onecolentry}
+    Advisor: Professor Katherine Markwell, School of Food Science and Nutrition, UoL 
+
+\end{onecolentry}
+        \vspace{0.10 cm}
+        \begin{onecolentry}
+            \begin{highlights}
+                \item Designed a pre-event feedback form to investigate the popular health topic among people, and then made the plan with SWOT analysis
+                \item By showing the example of a meal deal, we taught people how to read nutrition label and food traffic lights on the package 
+                \item A chocolate brownie and a healthier swap of banana brownie were both offered for people to taste and vote for their preference. A stick recycle box was used for voting to make it more interesting. 
+                \item Recipes of some healthy food swap was given to people to have a try at home.
+                \item An after-event feedback was filled out by people and being analyzed later to evaluate the effect of the event
+
+            \end{highlights}
+        \end{onecolentry}
+\end{comment}
+
+
+        \vspace{0 cm}
+    
+     
+          \begin{twocolentry}{
+            Jun. 2017 – Sep.2018
+        }
+            \textbf{\textbf{The Characteristics of Self-service Selling Goods | Project Leader }
+}\end{twocolentry}
+\begin{onecolentry}
+    Advisor: Doctor Ye Chen, School of Economics and Management, SHOU 
+
+\end{onecolentry}
+        \vspace{0 cm}
+        \begin{onecolentry}
+            \begin{highlights}
+                \item Conducted spatial sampling across Shanghai’s ring roads and analyzed vending machine distribution and product characteristics to identify consumer trends.
+
+            \end{highlights}
+        \end{onecolentry}
+
+
+        \vspace{0 cm}
+
+        \begin{twocolentry}
+        {Jul. 2016–Sep.2016 }
+            \textbf{Market Research and Promotion of Medicine-vending Machine | Project Leader }
+
+        \end{twocolentry}
+        \begin{onecolentry}
+            Advisor: Doctor Ye Chen, School of Economics and Management, SHOU \end{onecolentry}
+        \begin{onecolentry}
+            Funded by LuoZhaoyao Science and Technology Fellowship 
+
+        \end{onecolentry}
+        \vspace{0 cm}
+       
+
+        \begin{onecolentry}
+            \begin{highlights}
+                \item Conducted consumer surveys and stakeholder interviews—including government officials and pharmaceutical companies—to investigate public opinion, regulatory perspectives, and industry practices.
+            \end{highlights}
+        \end{onecolentry}
+
+
+        \vspace{0 cm}
+
+      
+
+        
+
+
+    
+  
+
+
+   \begin{comment}
+        
+    
+    \section{\RaggedRight{Extracurricular Activities}}
+
+
+
+             
+
+               \begin{twocolentry}{
+           Nov 2024 - present 
+        }
+           \textbf{Sustainable garden rebuild | Volunteer}\end{twocolentry}
+
+        \vspace{0.10 cm}
+        \begin{onecolentry}
+            \begin{highlights}
+                \item Cultivated the seeds to germinate and then transplant them into the garden. Remove weeds, turn over the soil, water, and set up protective nets to prevent plants from hares and squirrels
+            
+
+            \end{highlights}
+        \end{onecolentry}
+
+
+        \vspace{0.2 cm}
+
+  \begin{twocolentry}{
+           Jul 2025 - present 
+        }
+           \textbf{The differences between fast weight loss and slow weight loss | Volunteer}\end{twocolentry}
+
+        \vspace{0.10 cm}
+        \begin{onecolentry}
+            \begin{highlights}
+                \item As a nutrition student, I am extremely interested in health promotion, and joined this program as a volunteer
+                \item The initial stage of the experiment consisted of a 14-day free-living period, during which diet and activity levels were recorded using a 7-day food diary and a physical activity monitoring bracelet.
+                \item The goal was to reduce body weight by 10\% through dietary intake restriction. Volunteers were randomly divided into two groups: fast group, which achieved weight loss in one month, and slow group, which achieved weight loss in three months. This was followed by a six-month weight maintenance period.
+                \item Basic anthropometric measurements, such as height, weight, waist circumference, and hip circumference, are accepted as baseline data.
+                \item Basic metabolic rate (BMR) is measured using a bodpod. Resting metabolic rate (RMR) is measured using a gas metabolism method.
+                \item DEXA scanning provides a more precise picture of muscle mass and fat mass distribution. MRI scans are also used to verify the data and to observe changes in the brain before and after weight loss.
+                \item Blood glucose and hormone fluctuations were observed before and after meals. A canular in the arm was used to dynamically collect blood for analysis of glucose, GLP-1, and PYY. Video recordings were also used to observe the number of chewing times and eating patterns of volunteers before and after weight loss. An appetite psychology questionnaire was also used to understand eating motivation and appetite.
+ 
+                
+                
+                \end{highlights} 
+                \end{onecolentry}
+
+
+        \vspace{0.2 cm}
+
+          \begin{twocolentry}{
+           Jun 2025 
+        }
+           \textbf{Offer Holding Days in UoL | Student ambassador }\end{twocolentry}
+
+        \vspace{0.10 cm}
+        \begin{onecolentry}
+            \begin{highlights}
+                \item 
+Shared experiences with offer holders, mainly company internships and exchange study experiences in other countries 
+                \item 
+Guided people to the welcome talk in campus as well as their way to other places
+
+            \end{highlights}
+        \end{onecolentry}
+
+
+        \vspace{0.2 cm}
+
+        \begin{twocolentry}
+        {Jun 2025  }
+            \textbf{\textbf{myfood24's (diet record app) focus group on the usage experience of the elderly | Volunteer Guider }
+ }
+
+        \end{twocolentry}
+       
+   
+        \vspace{0.10 cm}
+       
+
+        \begin{onecolentry}
+            \begin{highlights}
+                \item By asking the participants to recall their diet 24 hours ago and guiding them to record it using the myfood24 app 
+                \item 
+Recorded the feedback during the usage process to help improve the software 
+            
+            \end{highlights}
+        \end{onecolentry}
+ 
+              \begin{twocolentry}{
+           Mar 2025 - May 2025 
+        }
+           \textbf{HELIX interest group}\end{twocolentry}
+
+        \vspace{0.10 cm}
+        \begin{onecolentry}
+            \begin{highlights}
+                \item Designed a T-shirt, using Ink/Stitch to design the pattern, and print the embroidered pattern on the T-shirt.
+                \item Learned the relevant knowledge of the interactivity of VR and designed an interactive scene project by Unity VR
+
+            \end{highlights}
+        \end{onecolentry}
+
+
+        \vspace{0.2 cm}
+
+       
+  \begin{twocolentry}
+        {Mar 2025   }
+            \textbf{\textbf{\textbf{Learning design team | Focus group}}
+ }
+
+        \end{twocolentry}
+       
+   
+        \vspace{0.10 cm}
+       
+
+        \begin{onecolentry}
+            \begin{highlights}
+                \item 
+Discuss how to optimize the APT system of the Faculty of Environment as a focus group. Storyboard our future plan in the end. 
+         
+            \end{highlights}
+        \end{onecolentry}
+ 
+         
+
+        \vspace{0.2 cm}
+
+  \begin{twocolentry}
+        {May 2024   }
+            \textbf{\textbf{\textbf{50 KM Hiking for An Egg | Volunteer}}
+ }
+
+        \end{twocolentry}
+       
+   
+        \vspace{0.10 cm}
+       
+
+        \begin{onecolentry}
+            \begin{highlights}
+                \item Raised funds for children in poor areas by hiking, focusing on children's nutrition and lunch.
+                \item Encouraged participants to complete the hike and provided them with food and water immediately
+                \item Chatted with people and sold children's creative works after the hiking to raise funds for charity
+
+         
+            \end{highlights}
+        \end{onecolentry}
+ 
+         
+
+        \vspace{0.2 cm}
+
+          \begin{twocolentry}
+        {2019 - 2021}
+            {\textbf{Postgraduate Student Union | Minister} }
+
+        \end{twocolentry}
+       
+   
+        \vspace{0.10 cm}
+       
+
+        \begin{onecolentry}
+            \begin{highlights}
+                \item Organized and held student congress 
+                \item Held the academic lecture about LIFE AND SCIENCE with 500 participants 
+                \item Organized and held Basketball Games and Cheerleading Competition 
+
+            
+            \end{highlights}
+        \end{onecolentry}
+ 
+         
+
+        \vspace{0.2 cm}
+
+
+
+          \begin{twocolentry}
+        {May 2018   }
+            \textbf{\textbf{Internet+ Innovation and Entrepreneurship Competition | Leader }
+ }
+
+        \end{twocolentry}
+       
+   
+        \vspace{0.10 cm}
+       
+
+        \begin{onecolentry}
+            \begin{highlights}
+                \item Designed a creative type of Medicine-vending Machine and make a business plan by cooperating with students of different backgrounds
+               
+            
+            \end{highlights}
+        \end{onecolentry}
+ 
+         
+
+        \vspace{0.2 cm}
+
+          \begin{twocolentry}
+        {2015 – 2017 }
+            \textbf{\textbf{\textbf{Student Union of Study \& Life | Vice Minister }}
+ }
+
+        \end{twocolentry}
+       
+   
+        \vspace{0.10 cm}
+       
+
+        \begin{onecolentry}
+            \begin{highlights}
+                \item Managed the assignment and examination of students' summer homework of Food college 
+                \item Organized Freshman Debating Competition 
+                \item Invited senior students to give lectures about the experience of taking part in the entrance exams for postgraduate schools 
+                \item Cooperated with food enterprises and school's department to raise funds for several writing competitions 
+                \item Assisted to hold the Freshman Welcoming Party of Food college 
+
+            \end{highlights}
+        \end{onecolentry}
+ 
+         
+
+        \vspace{0.2 cm}
+
+          \begin{twocolentry}
+        {Jun 2016 }
+            \textbf{\textbf{\textbf{Volunteer teaching for kids in mountain area, Guizhou, China | Volunteer  }}
+ }
+
+        \end{twocolentry}
+       
+   
+        \vspace{0.10 cm}
+       
+
+        \begin{onecolentry}
+            \begin{highlights}
+                \item  Taught elementary Mathematics and basketball skills 
+
+        
+            \end{highlights}
+        \end{onecolentry}
+ 
+         
+
+        \vspace{0.2 cm}
+
+          \begin{twocolentry}
+        {May 2016  }
+            \textbf{\textbf{\textbf{Marine Cultural Creativity Competition | Team work }}
+ }
+
+        \end{twocolentry}
+       
+   
+        \vspace{0.10 cm}
+       
+
+        \begin{onecolentry}
+            \begin{highlights}
+                \item Designed a creative artwork on marine culture and draw the design with Photoshop
+               
+            
+            \end{highlights}
+        \end{onecolentry}
+ 
+         
+
+        \vspace{0.2 cm}
+      
+
+
+
+\end{comment}
+
+\section{  Internship}
+  
+
+
+
+    \begin{twocolentry}
+        {Dec 2018 - Feb 2019 }\textbf{Shanghai Food Research Institute, Shanghai, China  }
+
+    \end{twocolentry}
+
+  \vspace{0.10 cm}
+       
+
+        \begin{onecolentry}
+            \begin{highlights}
+                \item 
+As an assistant for microbiological analyzing, I prepared and sterilized the culture medium every morning. Prepared experimental materials in advance and learnt from the laboratory staff about the detection for various foodborne pathogens. 
+               
+            
+            \end{highlights}
+        \end{onecolentry}
+ 
+
+
+
+
+
+
+    
+    \section{\mbox{Technical skills}}
+
+
+
+        
+        \begin{onecolentry}
+             \textbf{Equipment \& Technology}: Proteomics, Electrophoresis, FTIR, LF-NMR, DSC, RT-QPCR, Microbiological experiment operation, Determination of amino acids, flavor, and mineral substance, Toxicology experiments (with mouse model), GC-MS, ELISA, Raman spectrum, TEM, SEM, Kjeldahl Nitrogen Method, Soxhlet extraction, HPLC 
+
+        \end{onecolentry}
+
+        \vspace{0.2 cm}
+
+        \begin{onecolentry}
+           \textbf{Data analysis:} Prism, Origin, SPSS, STAT, Revman, Photoshop, Endnote, Zotero, ImageJ, Markdown, Latex, Unity VR 
+        \end{onecolentry}
+
+  \vspace{0.2 cm}
+
+\begin{onecolentry}
+     \textbf{Programming Languages }—Python 
+\end{onecolentry}
+
+
+    
+
+\end{document}
